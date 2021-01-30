@@ -34,13 +34,14 @@ nav ul {
 }
 
 nav ul li a {
-    color: #fff;
+    color: white;
     padding: 10px;
     text-transform: uppercase;
 }
 
 nav ul li a:hover,
 a.active {
+    color: white;
     background-color: #3352F2;
     border-radius: 5px;
 }
@@ -79,11 +80,14 @@ a.active {
 }
 
 .plus-minus-btn {
-    color: #3352F2;
+    color: blue;
     font-size: 30px;
     padding: 2px;
-    margin-top: 10px;
-    word-spacing: 20px;
+    margin-top: 22px;
+    line-height: 1;
+    border: none;
+    width: 40px;
+    height: 43px;
 }
 
 .booking-form .calculations {
@@ -139,8 +143,4 @@ a.active {
 .amount {
     display: flex;
     justify-content: space-between;
-}
-
-.custom-btn {
-    cursor: pointer;
 }

@@ -8,6 +8,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -26,25 +28,26 @@
     </header>
 
     <!--Booking Section-->
+
     <main class="main-content container">
         <div class="booking-form">
             <h3>Booking Flights</h3>
             <div class="input-group">
                 <label for="">Flying From</label>
-                <input class="inp-style" type="text" name="" placeholder="Dhaka, Bangladesh">
+                <input class="inp-style" type="text" name="" placeholder="Dhaka, Bangladesh" id="flyingfrom">
             </div>
             <div class="input-group">
                 <label for="">Flying To</label>
-                <input class="inp-style" type="text" name="" placeholder="New York, United States">
+                <input class="inp-style" type="text" name="" placeholder="New York, United States" id="flyingto">
             </div>
             <div class="inputs">
                 <div class="input-group">
                     <label for=" ">Departure</label>
-                    <input class="inp-style " type="date " name=" ">
+                    <input class="inp-style" type="date" name="" id="departure-date">
                 </div>
                 <div class="input-group ">
                     <label for=" ">Return</label>
-                    <input class="inp-style " type="date " name=" ">
+                    <input class="inp-style " type="date" name=" " id="return-date">
                 </div>
             </div>
             <div class="input-group f-class ">
@@ -52,9 +55,8 @@
                     <label for=" ">First Class ($150)</label>
                     <input id="first-count" class="inp-style inp-width " type="number " name=" " value="0">
                 </div>
-                <div class="plus-minus-btn ">
-                    <p><button class="plus-minus-btn" onclick="ticketBooking('first',true)">+ </button> <button class="plus-minus-btn" onclick="ticketBooking('first',false)">- </button> </p>
-                </div>
+                <button class="plus-minus-btn " onclick="ticketBooking('first',true)">+ </button>
+                <button class="plus-minus-btn " onclick="ticketBooking('first',false)">- </button>
             </div>
 
             <div class="input-group f-class ">
@@ -62,9 +64,8 @@
                     <label for=" ">Economy ($100)</label>
                     <input id="economy-count" class="inp-style inp-width " type="number " name=" " value="0">
                 </div>
-                <div class="plus-minus-btn ">
-                    <p> <button onclick="ticketBooking('economy',true)" class="plus-minus-btn ">+</button> <button onclick="ticketBooking('economy',false)" class="plus-minus-btn ">-</button></p>
-                </div>
+                <button onclick="ticketBooking('economy',true)" class="plus-minus-btn ">+</button>
+                <button onclick="ticketBooking('economy',false)" class="plus-minus-btn ">-</button>
             </div>
             <div class="calculations ">
                 <div class="amount ">
@@ -72,7 +73,7 @@
                         <p>Subtotal</p>
                     </div>
                     <div class="right ">
-                        <p id="subtotal">$00</p>
+                        <p id="subtotal">$0</p>
                     </div>
                 </div>
 
@@ -81,7 +82,7 @@
                         <p>Charge 10% VAT</p>
                     </div>
                     <div class="right ">
-                        <p id="vat">$00</p>
+                        <p id="vat">$0</p>
                     </div>
                 </div>
                 <hr>
@@ -90,11 +91,38 @@
                         <h4>Total</h4>
                     </div>
                     <div class="right ">
-                        <p id="final-total">$00</p>
+                        <p id="final-total">$0</p>
                     </div>
                 </div>
             </div>
-            <button class="btn-style ">Book Now</button>
+            <button onclick="successfullyBooked()" type="button" class="btn-style " data-bs-toggle="modal" data-bs-target="#popup">Book Now</button>
+
+            <div class="modal fade" id="popup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="status"></div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="error"></p>
+                            <p id="success"></p>
+                            <h5 id="flying-from"></h5>
+                            <br>
+                            <h5 id="flying-to"></h5>
+                            <br>
+                            <h5 id="departure-time"></h5>
+                            <br>
+                            <h5 id="return-time"></h5>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="booking-content ">
@@ -105,40 +133,115 @@
 
         <!--Thank You-->
 
+
+
+
         <!-- javascript start from here -->
 
+
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+
+
         <script>
+            // function for ticket counting and selection
+
             function ticketBooking(ticket, increase) {
-                const value = document.getElementById(ticket + '-count').value;
-                const value1 = parseFloat(value);
-                let final_v = value1;
+                const ticketCount = document.getElementById(ticket + '-count').value;
+                const ticketCounts = parseFloat(ticketCount);
+                let finalCount = ticketCounts;
                 if (increase == true) {
-                    final_v = value1 + 1;
+                    finalCount = ticketCounts + 1;
                 }
-                if (increase == false && final_v > 0) {
-                    final_v = value1 - 1;
+                if (increase == false && finalCount > 0) {
+                    finalCount = ticketCounts - 1;
                 }
-                document.getElementById(ticket + '-count').value = final_v;
+                document.getElementById(ticket + '-count').value = finalCount;
+                calculateTotal();
 
             }
+
+            // function for calculate all the  total
 
             function calculateTotal() {
-                const value = document.getElementById('first-count').value;
-                const value1 = parseInt(value);
+                const firstClass = document.getElementById('first-count').value;
+                const firstClassCount = parseInt(firstClass);
 
-                const value2 = document.getElementById('economy-count').value;
-                const value3 = parseInt(value2);
+                const economyClass = document.getElementById('economy-count').value;
+                const economyClassCount = parseInt(economyClass);
 
-                let productTotal = value1 * 150 + value3 * 100;
-                document.getElementById('subtotal').innerText = '$' + productTotal;
+                let subtotal = firstClassCount * 150 + economyClassCount * 100;
+                document.getElementById('subtotal').innerText = '$' + subtotal;
 
-                const tax = productTotal * 0.1;
-                document.getElementById('vat').innerText = '$' + tax;
+                const taxInclude = subtotal * 0.1;
+                document.getElementById('vat').innerText = '$' + taxInclude;
 
-                const grandTotal = productTotal + tax;
+                const grandTotal = subtotal + taxInclude;
                 document.getElementById('final-total').innerText = '$' + grandTotal;
             }
+
+
+            // function for error and success message at the popup window
+
+            function successfullyBooked() {
+
+                // taking all id as a empty field for pop up window
+
+                document.getElementById('status').innerHTML = "";
+                document.getElementById('error').innerHTML = "";
+                document.getElementById('success').innerHTML = "";
+                document.getElementById('flying-from').innerHTML = "";
+                document.getElementById('flying-to').innerHTML = "";
+                document.getElementById('departure-time').innerHTML = "";
+                document.getElementById('return-time').innerHTML = "";
+
+
+                // get first class value and economy class value
+
+                var firstClass = parseInt(document.getElementById('first-count').value);
+                var economyClass = parseInt(document.getElementById('economy-count').value);
+                var totalSeat = firstClass + economyClass;
+
+                // taking value of Flying From and Flying To
+                var flyingFrom = document.getElementById('flyingfrom').value;
+                var flyingTo = document.getElementById('flyingto').value;
+
+
+                // Departure Date and Return Date
+                var departureDate = document.getElementById('departure-date').value;
+                var returnDate = document.getElementById('return-date').value;
+
+                // if the user give nothing in the form then show the error message
+                if (flyingFrom == "" && flyingTo == "" || firstClass == "" && economyClass == "" || departureDate == "" && returnDate == "") {
+                    document.getElementById('status').innerHTML = "<h1 class='modal-title' id='errorTitle' style='color: Red;'>Error!</h1>";
+                    document.getElementById('error').innerHTML = "<h5>Please fill up all the required field in the form for booking</h5>";
+                }
+
+                //if the user give all the info then show him congratulations window
+                else {
+                    document.getElementById('status').innerHTML = "";
+                    document.getElementById('error').innerHTML = "";
+                    document.getElementById('success').innerHTML = "";
+
+                    document.getElementById('status').innerHTML = "<h1 class='modal-title' id='successTitle' style='color: coral;'>Congratulations!</h1>";
+                    document.getElementById('success').innerHTML = "<div><h3>You have successfully booked <span id='total-seat'>" +
+                        totalSeat + "</span> <br> Tickets in our airlines.</h3>";
+
+                    document.getElementById('flying-from').innerHTML = "Flying From: " + flyingFrom;
+                    document.getElementById('flying-to').innerHTML = "Flying To: " + flyingTo;
+
+                    document.getElementById('departure-time').innerHTML = "Departure Date: " + departureDate;
+                    document.getElementById('return-time').innerHTML = "Return Date: " + returnDate;
+
+                }
+
+            }
         </script>
+
+
+
+
 </body>
 
 </html>
